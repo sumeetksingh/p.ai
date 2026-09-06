@@ -1,0 +1,58 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    color-scheme: light;
+    background: #f7f8fa;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  body {
+    margin: 0;
+    min-width: 320px;
+    background:
+      radial-gradient(circle at 55% -20%, rgba(27, 84, 166, 0.05), transparent 34rem),
+      #f7f8fa;
+    color: #17191c;
+  }
+
+  button,
+  input,
+  select {
+    font: inherit;
+  }
+
+  button:focus-visible,
+  input:focus-visible {
+    outline: 3px solid rgba(30, 91, 176, 0.28);
+    outline-offset: 2px;
+  }
+}
+
+@media (max-width: 960px) {
+  .pulse-shell {
+    min-width: 960px;
+  }
+
+  .pulse-main {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+}
+
+@media print {
+  aside,
+  button,
+  .sticky {
+    display: none !important;
+  }
+
+  .pulse-main {
+    padding: 0 !important;
+  }
+}

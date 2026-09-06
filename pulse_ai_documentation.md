@@ -102,13 +102,27 @@ The Get Well Plan is the execution layer between strategy and SKU operations:
 
 1. Scenario Planner defines assortment strategy.
 2. The strategy changes the Order and Return recommendations visible in the SKU List.
-3. Get Well Plan pairs the highest-ranked missing products with the lowest-ranked products held.
-4. A manually assigned monthly store capacity splits those paired replacements into waves.
-5. Each wave projects newly aligned products, remaining backlog, and health-score improvement.
-6. Launching a wave freezes its actions for operational stability.
-7. Completed waves remain historical; only future waves refresh from daily rankings and current strategy.
+3. The navigation-level Get Well Enablement console turns a store's digital worker on or off after DC capacity has been assigned.
+4. Enabling a store automatically builds and maintains its proposed execution plan.
+5. Review, editing, and launch happen within that store's own page rather than in the enablement console.
+6. The store plan pairs the highest-ranked missing products with the lowest-ranked products held.
+7. A manually assigned monthly store capacity splits those paired replacements into waves.
+8. Each wave projects newly aligned products, remaining backlog, and health-score improvement.
+9. Launching a wave freezes its actions for operational stability.
+10. Completed waves remain historical; only future waves refresh from daily rankings and current strategy.
 
-For the MVP, one store receives one manually configured monthly replacement capacity. A capacity of 10,000 means 10,000 Returns plus 10,000 paired Orders per wave. Order and Return CSVs can be exported separately.
+For the MVP, each enabled store receives one manually configured monthly replacement capacity. A capacity of 10,000 means 10,000 Returns plus 10,000 paired Orders per wave. Order and Return CSVs can be exported separately.
+
+### Information architecture
+
+- **Get Well Enablement navigation:** portfolio-level activation and monitoring of store digital workers.
+- **Store page:** detailed recovery journey, capacity settings, wave review, edits, and launch.
+- **SKU List:** ranked operational inputs and a contextual link back to the store execution plan.
+- **Scenario Planner:** strategy source whose rules affect future SKU recommendations and unlaunched waves.
+
+### Visual direction
+
+The Get Well experience stays inside Pulse AI's existing visual language: neutral dashboard surfaces, blue primary actions, familiar health-score colors, compact filters, and bordered metric cards. The store journey is organized around outcomes rather than folders: each wave reveals the category health transitions, Scenario Planner rules, ranked Orders and Returns, aligned-product gain, and projected store health lift it creates.
 
 ## 10. Known boundaries
 

@@ -102,21 +102,21 @@ Store Execution is the operational layer between strategy and SKU recommendation
 
 1. Scenario Planner defines assortment strategy.
 2. The strategy changes the Order and Return recommendations visible in the SKU List.
-3. The navigation-level Execution Enablement console turns a store's digital worker on or off after DC capacity has been assigned.
+3. The navigation-level Execution Enablement console turns a store's digital worker on or off after its monthly DC return budget has been assigned.
 4. Enabling a store automatically builds and maintains its proposed execution plan.
 5. Review, editing, and launch happen within that store's own page rather than in the enablement console.
 6. The store plan pairs the highest-ranked missing products with the lowest-ranked products held.
-7. A manually assigned monthly store capacity splits those paired replacements into waves.
+7. A manually assigned monthly return-value budget splits the Return recommendations into waves.
 8. Each wave projects newly aligned products, remaining backlog, and health-score improvement.
 9. Launching a wave freezes its actions for operational stability.
 10. Completed waves remain historical; only future waves refresh from daily rankings and current strategy.
 
-For the MVP, each enabled store receives one manually configured monthly replacement capacity. A capacity of 10,000 means 10,000 Returns plus 10,000 paired Orders per wave. Order and Return CSVs can be exported separately.
+For the MVP, each enabled store receives one manually configured monthly return budget. A budget of $10,000 means the DC can accept up to $10,000 of returned inventory value from that store during the month. Pulse selects the worst-ranked Return recommendations until that value limit is reached; the number of returned SKUs therefore varies with item value. Order recommendations are sequenced from the highest-ranked missing products and are reported separately—they do not consume the DC return budget. The budget exists because accepted Returns are recognized as a negative impact in the DC's P&L and consume finite handling capacity.
 
 ### Information architecture
 
 - **Execution Enablement navigation:** portfolio-level activation and monitoring of store digital workers.
-- **Store page:** detailed recovery journey, capacity settings, wave review, edits, and launch.
+- **Store page:** detailed recovery journey, monthly return-budget settings, wave review, edits, and launch.
 - **SKU List:** ranked operational inputs and a contextual link back to the store execution plan.
 - **Scenario Planner:** strategy source whose rules affect future SKU recommendations and unlaunched waves.
 

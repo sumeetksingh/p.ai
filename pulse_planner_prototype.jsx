@@ -4,7 +4,9 @@ import {
   List, HelpCircle, Beaker, Edit3, AlertTriangle, Save, Download,
   DollarSign, Grid3x3, RotateCcw, Store, Info, Check, X, Zap, Scale,
   Search, Home, Package, CheckCircle2, FileText, SlidersHorizontal,
-  BookOpen, ChevronDown, ArrowDownUp,
+  BookOpen, ChevronDown, ArrowDownUp, CalendarDays, PlayCircle,
+  RefreshCw, Clock3, TrendingUp, ClipboardList, CircleCheckBig,
+  Route, CircleArrowOutUpRight,
 } from 'lucide-react';
 
 // ============================================================================
@@ -520,7 +522,9 @@ function Sidebar({ current, onNavigate }) {
         <NavBtn id="health" icon={LayoutGrid} label="Store / category health" active={isHealth} />
         <NavBtn id="sku-list" icon={List} label="SKU list" active={current === 'sku-list'} />
         <div className="my-2 border-t border-gray-200"></div>
-        <NavBtn id="planner-door" icon={Beaker} label="Scenario planner" active={isPlanner} accent badge="NEW" />
+        <div className="px-2 pt-1 pb-1 text-[9px] font-semibold uppercase tracking-[0.16em] text-gray-400">Plan &amp; execute</div>
+        <NavBtn id="planner-door" icon={Beaker} label="Scenario planner" active={isPlanner} />
+        <NavBtn id="get-well" icon={Route} label="Get well plan" active={current === 'get-well'} accent badge="MVP" />
         <div className="my-2 border-t border-gray-200"></div>
         <NavBtn id="help" icon={HelpCircle} label="How it works" active={current === 'help'} />
       </nav>
@@ -794,6 +798,12 @@ function PlannerFrontDoor({ onNavigate, savedScenarios, onLoadScenario }) {
 
       <div className="mt-5 px-3.5 py-3 bg-gray-100 rounded-md text-xs text-gray-600 leading-relaxed">
         <span className="font-medium text-gray-900">Why one or the other?</span> Combining both produces conflicts — your space % may not be honored exactly, or your budget may not be fully spent. We force the choice up front. Each mode shows the implied other constraint as read-only context.
+      </div>
+
+      <div className="mt-3 px-4 py-4 bg-blue-950 text-white rounded-lg flex items-center gap-3">
+        <div className="w-9 h-9 rounded-lg bg-white/10 flex items-center justify-center"><Route size={17} /></div>
+        <div className="flex-1"><div className="text-sm font-medium">Strategy ready to execute?</div><div className="text-[11px] text-blue-200 mt-0.5">Turn the resulting Order and Return recommendations into capacity-sized monthly waves.</div></div>
+        <button onClick={() => onNavigate('get-well')} className="rounded-md bg-white text-blue-950 px-3 py-2 text-xs font-medium flex items-center gap-1.5">Open get well plan <ArrowRight size={13} /></button>
       </div>
     </div>
   );
@@ -2001,6 +2011,12 @@ function StoreDetailScreen({ onNavigate }) {
           <div className="grid grid-cols-3 gap-3 mt-4"><div className="rounded-xl bg-green-50 border border-green-100 p-4"><strong className="text-xl">2</strong><div className="text-xs">Excellent</div></div><div className="rounded-xl bg-amber-50 border border-amber-100 p-4"><strong className="text-xl">1</strong><div className="text-xs">At risk</div></div><div className="rounded-xl bg-red-50 border border-red-100 p-4"><strong className="text-xl">29</strong><div className="text-xs">Critical</div></div></div>
         </div>
       </div>
+      <section className="mt-4 rounded-2xl border border-blue-200 bg-gradient-to-r from-blue-950 to-blue-800 text-white px-5 py-4 flex items-center gap-4">
+        <div className="w-11 h-11 rounded-xl bg-white/10 flex items-center justify-center"><Route size={20} /></div>
+        <div className="flex-1"><div className="flex items-center gap-2"><h2 className="text-sm font-medium">Get well plan</h2><span className="rounded-full bg-white/10 px-2 py-0.5 text-[10px] text-blue-100">Draft</span></div><p className="text-xs text-blue-100 mt-1">Sequence this store’s Order and Return recommendations into monthly execution waves, then track the projected health lift.</p></div>
+        <div className="hidden xl:flex gap-7 text-xs"><div><span className="block text-blue-200">Actionable</span><strong className="text-lg">3,691</strong></div><div><span className="block text-blue-200">Current score</span><strong className="text-lg">31</strong></div></div>
+        <button onClick={() => onNavigate('get-well')} className="rounded-lg bg-white text-blue-950 px-4 py-2.5 text-xs font-semibold flex items-center gap-2">Build execution plan <ArrowRight size={14} /></button>
+      </section>
       <section className="mt-5">
         <div className="flex flex-wrap justify-between gap-3 items-end"><div><h2 className="text-lg font-medium">Categories</h2><p className="text-xs text-gray-500">Showing {rows.length} of 32 categories by worst health</p></div><div className="flex gap-2">{['All','Excellent','At Risk','Critical'].map(x => <button key={x} onClick={() => setFilter(x)} className={`rounded-full border px-4 py-2 text-xs ${filter === x ? 'border-blue-700 bg-blue-50 text-blue-800' : 'border-gray-200 text-gray-600'}`}>{x}</button>)}</div></div>
         <div className="bg-white border border-gray-200 rounded-2xl mt-3 divide-y divide-gray-100 overflow-hidden">{rows.map((row, i) => <button key={row.name} onClick={() => onNavigate(row.name === 'Body & Accessories' ? 'category-l2' : 'store-detail')} className="w-full grid items-center text-left px-5 py-3 hover:bg-gray-50" style={{ gridTemplateColumns: '42px 1fr 56px 20px' }}><span className="text-sm text-gray-500">{i + 1}</span><span><strong className="text-sm block">{row.name}</strong><span className="text-[11px] text-gray-500">{row.current} current · <i className="not-italic text-red-700">{row.notAligned} not aligned</i></span></span><ScoreBadge score={row.score} /><ChevronRight size={16} className="text-gray-400" /></button>)}</div>
@@ -2038,7 +2054,7 @@ function CategoryHealthScreen({ level, onNavigate }) {
   );
 }
 
-function SkuListScreen() {
+function SkuListScreen({ onNavigate }) {
   const [query, setQuery] = useState('');
   const [action, setAction] = useState('All actions');
   const rows = CURRENT_SKUS.filter(row => `${row.part} ${row.description} ${row.brand}`.toLowerCase().includes(query.toLowerCase()));
@@ -2047,8 +2063,139 @@ function SkuListScreen() {
       <Breadcrumb items={['Assortment overview','ATL-466','Hardware & Components L3-2','SKU list']} />
       <h1 className="text-[22px] font-medium">SKU list</h1><p className="text-sm text-gray-500 mt-1">Explore and review SKUs across your stores</p>
       <div className="mt-5 rounded-2xl border border-blue-100 bg-blue-50 px-5 py-4 flex gap-4"><div className="w-10 h-10 rounded-xl bg-white text-blue-700 flex items-center justify-center"><Package size={19} /></div><div className="flex-1"><div className="flex justify-between"><strong className="text-sm">{rows.length} recommended SKUs</strong><button onClick={() => { setQuery(''); setAction('All actions'); }} className="text-xs text-gray-600 underline">Clear selection</button></div><p className="text-xs text-gray-600 mt-1">These SKUs are ranked by their impact on inventory health. Review the system-recommended items, then export the list for ordering, returns, or keeping inventory.</p><div className="flex flex-wrap gap-x-4 gap-y-1 text-xs mt-2 text-gray-600"><span><i className="text-blue-600 not-italic">●</i> Store: ATL-466 (FORT GAINES GA)</span><span><i className="text-blue-600 not-italic">●</i> Category: Body &amp; Accessories</span><span><i className="text-blue-600 not-italic">●</i> Brand: All brands</span><button onClick={() => setAction(action === 'All actions' ? 'Order' : 'All actions')}><i className="text-blue-600 not-italic">●</i> Action: {action} <ChevronDown size={12} className="inline" /></button></div></div></div>
+      <div className="mt-3 rounded-2xl border border-gray-200 bg-white px-5 py-4 flex items-center gap-4 shadow-sm">
+        <div className="w-10 h-10 rounded-xl bg-violet-50 text-violet-700 flex items-center justify-center"><ClipboardList size={19} /></div>
+        <div className="flex-1"><div className="text-sm font-medium">Move from recommendations to execution</div><p className="text-xs text-gray-500 mt-1">Pair the highest-ranked missing products with the lowest-ranked products you hold, then schedule the actions around DC capacity.</p></div>
+        <button onClick={() => onNavigate('get-well')} className="rounded-lg bg-gray-950 hover:bg-black text-white px-4 py-2.5 text-xs font-medium flex items-center gap-2">Create get well plan <ArrowRight size={14} /></button>
+      </div>
       <section className="mt-4 bg-white border border-gray-200 rounded-2xl p-4 overflow-hidden"><label className="relative inline-block mb-4"><Search size={15} className="absolute left-3 top-2.5 text-gray-400" /><input value={query} onChange={e => setQuery(e.target.value)} placeholder="Search" className="w-72 pl-9 pr-3 py-2 border border-gray-200 rounded-full text-sm outline-none focus:border-blue-500" /></label><div className="overflow-auto"><table className="w-full text-xs min-w-[1000px]"><thead className="bg-gray-100 text-gray-600"><tr>{['Rank','Part number','Part description','Field abbr.','Store ID','Category L1','Category L2','Category L3','Category L4','Status'].map(h => <th key={h} className="text-left font-medium px-3 py-3 whitespace-nowrap">{h} ↓</th>)}</tr></thead><tbody className="divide-y divide-gray-100">{rows.map(row => <tr key={row.rank} className="hover:bg-gray-50"><td className="px-3 py-3 font-medium">{row.rank}</td><td className="px-3 py-3">{row.part}</td><td className="px-3 py-3 font-medium">{row.description}</td><td className="px-3 py-3">{row.brand}</td><td className="px-3 py-3">ATL-466<br /><span className="text-gray-500">(FORT GAINES GA)</span></td><td className="px-3 py-3">Body &amp; Accessories</td><td className="px-3 py-3">Interior</td><td className="px-3 py-3">Hardware &amp; Components</td><td className="px-3 py-3">{row.l4}</td><td className="px-3 py-3"><span className="rounded-full bg-amber-50 border border-amber-200 text-amber-800 px-2 py-1">• {row.status}</span></td></tr>)}</tbody></table></div></section>
       <div className="sticky bottom-4 mx-auto mt-4 max-w-md bg-blue-800 text-white rounded-2xl px-5 py-3 flex justify-between items-center shadow-lg"><div><strong className="text-sm">{rows.length} SKUs</strong><p className="text-[11px] text-blue-100">CSV: SKU number + Store ID</p></div><button onClick={() => downloadSkuCsv(rows)} className="rounded-xl bg-white/10 hover:bg-white/20 px-4 py-2 text-sm flex items-center gap-2"><Download size={15} />Export SKUs</button></div>
+    </div>
+  );
+}
+
+const WAVE_ORDERS = [
+  { rank: '#1', part: 'SP-100428', name: 'Iridium spark plug', brand: 'NGK', reason: 'Highest-ranked missing product' },
+  { rank: '#2', part: 'FL-88210', name: 'Premium oil filter', brand: 'NAPA Gold', reason: 'Strong local demand fit' },
+  { rank: '#3', part: 'BP-44012', name: 'Ceramic brake pad set', brand: 'Adaptive One', reason: 'High velocity, currently missing' },
+  { rank: '#4', part: 'WB-22018', name: 'All-season wiper blade', brand: 'Trico', reason: 'Service-level opportunity' },
+];
+
+const WAVE_RETURNS = [
+  { rank: '#48,210', part: 'SP-731990', name: 'Copper spark plug', brand: 'Brembo', reason: 'Lowest-ranked product held' },
+  { rank: '#48,209', part: 'EL-10492', name: 'Legacy relay kit', brand: 'Echlin', reason: 'Low demand and excess stock' },
+  { rank: '#48,208', part: 'AC-00918', name: 'Universal phone holder', brand: 'Balkamp', reason: 'Low velocity in this market' },
+  { rank: '#48,207', part: 'LT-67220', name: 'Halogen lamp twin pack', brand: 'NightVision', reason: 'Better-ranked substitute available' },
+];
+
+function exportWaveCsv(type, wave) {
+  const source = type === 'Order' ? WAVE_ORDERS : WAVE_RETURNS;
+  const header = ['Wave', 'Action', 'Rank', 'Part number', 'Description', 'Brand', 'Store', 'Reason'];
+  const rows = source.map(item => [wave.number, type, item.rank, item.part, item.name, item.brand, 'ATL-050', item.reason]);
+  const csv = [header, ...rows].map(row => row.map(value => `"${String(value).replaceAll('"', '""')}"`).join(',')).join('\n');
+  const url = URL.createObjectURL(new Blob([csv], { type: 'text/csv' }));
+  const anchor = document.createElement('a');
+  anchor.href = url;
+  anchor.download = `ATL-050-wave-${wave.number}-${type.toLowerCase()}s.csv`;
+  anchor.click();
+  URL.revokeObjectURL(url);
+}
+
+function GetWellPlanScreen({ onNavigate }) {
+  const [capacity, setCapacity] = useState(10000);
+  const [selectedWave, setSelectedWave] = useState(0);
+  const [launched, setLaunched] = useState(false);
+  const [completedWaves, setCompletedWaves] = useState(0);
+  const [refreshLabel, setRefreshLabel] = useState('Today, 6:00 AM');
+  const backlog = 30000;
+  const assortment = 42000;
+  const alignedToday = 12000;
+  const safeCapacity = Math.max(1000, Math.min(30000, Number(capacity) || 10000));
+  const monthLabels = ['Sep 2026', 'Oct 2026', 'Nov 2026', 'Dec 2026', 'Jan 2027', 'Feb 2027', 'Mar 2027', 'Apr 2027'];
+  const waveCount = Math.ceil(backlog / safeCapacity);
+  const waves = Array.from({ length: waveCount }, (_, index) => {
+    const alreadyAddressed = index * safeCapacity;
+    const size = Math.min(safeCapacity, backlog - alreadyAddressed);
+    const alignedBefore = alignedToday + alreadyAddressed;
+    const alignedAfter = alignedBefore + size;
+    return {
+      number: index + 1,
+      month: monthLabels[index] || `Month ${index + 1}`,
+      size,
+      before: Math.round((alignedBefore / assortment) * 100),
+      after: Math.round((alignedAfter / assortment) * 100),
+      alignedAfter,
+      remaining: Math.max(0, backlog - alreadyAddressed - size),
+    };
+  });
+  const activeWave = waves[Math.min(selectedWave, waves.length - 1)];
+  const planProgress = Math.round((Math.min(completedWaves, waveCount) / waveCount) * 100);
+
+  function handleCapacityChange(value) {
+    setCapacity(value);
+    setSelectedWave(0);
+    setLaunched(false);
+    setCompletedWaves(0);
+  }
+
+  function completeCurrentWave() {
+    const nextCompleted = Math.min(waveCount, completedWaves + 1);
+    setCompletedWaves(nextCompleted);
+    setLaunched(false);
+    setSelectedWave(Math.min(nextCompleted, waveCount - 1));
+  }
+
+  return (
+    <div>
+      <div className="flex items-start justify-between gap-4">
+        <div><Breadcrumb items={['Pulse AI', 'Get well plan', 'ATL-050']} /><div className="flex items-center gap-2"><h1 className="text-[22px] font-medium">ATL-050 get well plan</h1><span className={`rounded-full px-2.5 py-1 text-[10px] font-medium ${launched || completedWaves > 0 ? 'bg-green-50 text-green-800 border border-green-200' : 'bg-amber-50 text-amber-800 border border-amber-200'}`}>{launched || completedWaves > 0 ? 'In progress' : 'Draft'}</span></div><p className="text-sm text-gray-500 mt-1">Turn the best Orders and worst Returns into a capacity-aware path to assortment health.</p></div>
+        <div className="flex items-center gap-2"><button onClick={() => setRefreshLabel('Just now')} className="rounded-full border border-gray-200 bg-white px-3.5 py-2 text-xs text-gray-600 flex items-center gap-2"><RefreshCw size={13} />Recommendations updated {refreshLabel}</button>{launched ? <button onClick={completeCurrentWave} className="rounded-full bg-green-700 hover:bg-green-800 text-white px-4 py-2 text-sm font-medium flex items-center gap-2"><CircleCheckBig size={15} />Mark wave {completedWaves + 1} complete</button> : completedWaves < waveCount && <button onClick={() => { setLaunched(true); setSelectedWave(completedWaves); }} className="rounded-full bg-blue-700 hover:bg-blue-800 text-white px-4 py-2 text-sm font-medium flex items-center gap-2"><PlayCircle size={15} />Launch wave {completedWaves + 1}</button>}</div>
+      </div>
+
+      <div className="mt-5 bg-white border border-gray-200 rounded-2xl px-5 py-4">
+        <div className="grid items-center" style={{ gridTemplateColumns: '1fr 54px 1fr 54px 1fr' }}>
+          <button onClick={() => onNavigate('planner-door')} className="text-left flex items-center gap-3"><span className="w-9 h-9 rounded-full bg-green-50 text-green-700 flex items-center justify-center"><Check size={16} /></span><span><strong className="text-xs block">1 · Strategy</strong><small className="text-[11px] text-gray-500">ATL-050 assortment strategy</small></span></button>
+          <div className="h-px bg-green-200" />
+          <button onClick={() => onNavigate('sku-list')} className="text-left flex items-center gap-3"><span className="w-9 h-9 rounded-full bg-green-50 text-green-700 flex items-center justify-center"><Check size={16} /></span><span><strong className="text-xs block">2 · Recommendations</strong><small className="text-[11px] text-gray-500">30,000 matched swaps</small></span></button>
+          <div className="h-px bg-blue-300" />
+          <div className="flex items-center gap-3"><span className="w-9 h-9 rounded-full bg-blue-700 text-white flex items-center justify-center"><Route size={16} /></span><span><strong className="text-xs block">3 · Execution</strong><small className="text-[11px] text-gray-500">Monthly capacity waves</small></span></div>
+        </div>
+      </div>
+
+      <section className="mt-4 rounded-2xl bg-blue-950 text-white px-5 py-4 flex items-center gap-4">
+        <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center"><Beaker size={18} /></div><div className="flex-1"><div className="text-xs text-blue-200">Strategy source</div><div className="text-sm font-medium mt-0.5">ATL-050 Q4 assortment strategy · 4 active rules</div><p className="text-[11px] text-blue-200 mt-1">Includes: deprioritize Brembo in Spark Plugs. Strategy changes flow into future recommendations, never an active wave.</p></div><button onClick={() => onNavigate('planner-door')} className="rounded-lg border border-white/20 px-3.5 py-2 text-xs flex items-center gap-2">View strategy <CircleArrowOutUpRight size={13} /></button>
+      </section>
+
+      <div className="grid grid-cols-4 gap-3 mt-4">
+        <div className="bg-white border border-gray-200 rounded-2xl p-4"><div className="flex justify-between"><span className="text-xs text-gray-500">Health journey</span><TrendingUp size={16} className="text-green-700" /></div><div className="mt-2 flex items-end gap-2"><strong className="text-2xl">29</strong><ArrowRight size={16} className="text-gray-400 mb-1.5" /><strong className="text-2xl text-green-700">100</strong></div><div className="text-[11px] text-gray-500 mt-1">Projected after {waveCount} waves</div></div>
+        <div className="bg-white border border-gray-200 rounded-2xl p-4"><div className="flex justify-between"><span className="text-xs text-gray-500">Products aligned today</span><CheckCircle2 size={16} className="text-blue-700" /></div><strong className="text-2xl block mt-2">12,000</strong><div className="text-[11px] text-gray-500 mt-1">of 42,000 in assortment</div></div>
+        <div className="bg-white border border-gray-200 rounded-2xl p-4"><div className="flex justify-between"><span className="text-xs text-gray-500">Actionable swaps</span><ArrowDownUp size={16} className="text-violet-700" /></div><strong className="text-2xl block mt-2">30,000</strong><div className="text-[11px] text-gray-500 mt-1">30,000 Orders + 30,000 Returns</div></div>
+        <div className="bg-white border border-gray-200 rounded-2xl p-4"><div className="flex justify-between"><span className="text-xs text-gray-500">Estimated completion</span><CalendarDays size={16} className="text-amber-700" /></div><strong className="text-2xl block mt-2">{waves[waveCount - 1]?.month}</strong><div className="text-[11px] text-gray-500 mt-1">At {safeCapacity.toLocaleString()} swaps per month</div></div>
+      </div>
+
+      <section className="mt-4 bg-white border border-gray-200 rounded-2xl p-5">
+        <div className="flex items-start justify-between gap-4"><div><h2 className="font-medium">Recovery plan</h2><p className="text-xs text-gray-500 mt-1">Current wave stays stable. Pulse re-ranks every future wave as recommendations change.</p></div><label className="text-xs text-gray-500">Monthly replacement capacity<div className="mt-1 flex items-center rounded-lg border border-gray-200 bg-gray-50 overflow-hidden"><input aria-label="Monthly replacement capacity" value={capacity} onChange={event => handleCapacityChange(event.target.value)} type="number" min="1000" max="30000" step="1000" className="w-28 bg-transparent px-3 py-2 text-sm font-medium text-gray-900 outline-none" /><span className="pr-3 text-[11px]">swaps</span></div></label></div>
+        <div className="mt-5 grid items-end gap-2" style={{ gridTemplateColumns: `repeat(${waveCount + 1}, minmax(90px, 1fr))` }}>
+          <div className="text-center"><div className="h-16 rounded-t-lg bg-gray-100 border border-gray-200 flex items-end justify-center pb-2 text-sm font-semibold">29</div><div className="mt-2 text-[11px] font-medium">Today</div><div className="text-[10px] text-gray-500">12K aligned</div></div>
+          {waves.map((wave, index) => {
+            const complete = index < completedWaves;
+            const inProgress = index === completedWaves && launched;
+            const selected = selectedWave === index;
+            return <button key={wave.number} onClick={() => setSelectedWave(index)} className={`text-center rounded-xl px-1.5 pt-2 pb-2 border transition-colors ${selected ? 'border-blue-600 bg-blue-50' : 'border-transparent hover:border-gray-200'}`}><div className={`rounded-t-lg flex items-end justify-center pb-2 text-sm font-semibold ${complete ? 'bg-green-600 text-white' : inProgress ? 'bg-blue-700 text-white' : 'bg-blue-100 text-blue-900'}`} style={{ height: `${52 + wave.after * 0.75}px` }}>{wave.after}</div><div className="mt-2 text-[11px] font-medium">Wave {wave.number}</div><div className="text-[10px] text-gray-500">{complete ? 'Completed' : inProgress ? 'In progress' : wave.month}</div></button>;
+          })}
+        </div>
+        <div className="mt-4 flex justify-between items-center"><div className="text-[11px] text-gray-500">Plan progress · {completedWaves} of {waveCount} waves complete</div><div className="w-48 h-1.5 rounded-full bg-gray-100 overflow-hidden"><div className="h-full bg-green-600 rounded-full transition-all" style={{ width: `${planProgress}%` }} /></div></div>
+      </section>
+
+      <section className="mt-4 bg-white border border-gray-200 rounded-2xl overflow-hidden">
+        <div className="px-5 py-4 border-b border-gray-100 flex items-center justify-between"><div><div className="flex items-center gap-2"><h2 className="font-medium">Wave {activeWave.number} · {activeWave.month}</h2>{selectedWave === completedWaves && launched && <span className="rounded-full bg-blue-50 border border-blue-200 text-blue-700 px-2 py-0.5 text-[10px]">Locked · in progress</span>}</div><p className="text-xs text-gray-500 mt-1">The highest-value paired actions available when this wave was generated.</p></div><div className="flex items-center gap-5 text-xs"><span><strong className="text-base block">{activeWave.before} → <i className="not-italic text-green-700">{activeWave.after}</i></strong><small className="text-gray-500">Health score</small></span><span><strong className="text-base block">+{activeWave.size.toLocaleString()}</strong><small className="text-gray-500">Newly aligned</small></span><span><strong className="text-base block">{activeWave.remaining.toLocaleString()}</strong><small className="text-gray-500">Remaining</small></span></div></div>
+        <div className="grid grid-cols-2 divide-x divide-gray-100">
+          <div><div className="px-5 py-3 bg-green-50 flex items-center justify-between"><div><strong className="text-sm text-green-900">Bring in · {activeWave.size.toLocaleString()} Orders</strong><p className="text-[11px] text-green-800 mt-0.5">Best missing products, ranked highest first</p></div><button onClick={() => exportWaveCsv('Order', activeWave)} className="rounded-lg border border-green-200 bg-white px-3 py-2 text-xs text-green-800 flex gap-1.5 items-center"><Download size={13} />Order file</button></div><div className="divide-y divide-gray-100">{WAVE_ORDERS.map(item => <div key={item.part} className="px-5 py-3 grid gap-3" style={{ gridTemplateColumns: '58px 1fr' }}><span className="text-xs font-semibold text-green-700">{item.rank}</span><div><div className="text-xs font-medium">{item.name} <span className="font-normal text-gray-400">· {item.part}</span></div><div className="text-[11px] text-gray-500 mt-0.5">{item.brand} · {item.reason}</div></div></div>)}</div><div className="px-5 py-3 text-[11px] text-gray-500 bg-gray-50">+ {(activeWave.size - WAVE_ORDERS.length).toLocaleString()} more Orders in this wave</div></div>
+          <div><div className="px-5 py-3 bg-red-50 flex items-center justify-between"><div><strong className="text-sm text-red-900">Move out · {activeWave.size.toLocaleString()} Returns</strong><p className="text-[11px] text-red-800 mt-0.5">Worst products held, ranked lowest first</p></div><button onClick={() => exportWaveCsv('Return', activeWave)} className="rounded-lg border border-red-200 bg-white px-3 py-2 text-xs text-red-800 flex gap-1.5 items-center"><Download size={13} />Return file</button></div><div className="divide-y divide-gray-100">{WAVE_RETURNS.map(item => <div key={item.part} className="px-5 py-3 grid gap-3" style={{ gridTemplateColumns: '58px 1fr' }}><span className="text-xs font-semibold text-red-700">{item.rank}</span><div><div className="text-xs font-medium">{item.name} <span className="font-normal text-gray-400">· {item.part}</span></div><div className="text-[11px] text-gray-500 mt-0.5">{item.brand} · {item.reason}</div></div></div>)}</div><div className="px-5 py-3 text-[11px] text-gray-500 bg-gray-50">+ {(activeWave.size - WAVE_RETURNS.length).toLocaleString()} more Returns in this wave</div></div>
+        </div>
+      </section>
+
+      <div className="mt-4 rounded-xl bg-amber-50 border border-amber-200 px-4 py-3 flex items-start gap-3"><Clock3 size={16} className="text-amber-700 mt-0.5" /><div><div className="text-xs font-medium text-amber-950">How daily recommendations behave</div><p className="text-[11px] text-amber-900 mt-1 leading-relaxed">Launching a wave freezes its SKU actions for execution. Completed work is preserved. Only unlaunched waves are rebuilt from the newest Pulse rankings and active Scenario Planner strategy, so the plan stays current without moving the operational goalposts.</p></div></div>
     </div>
   );
 }
@@ -2061,8 +2208,9 @@ function HowItWorksScreen() {
     ['SKU recommendations','Build a recommended SKU list from the current scope. Recommendations carry rank, part identifiers, hierarchy, store, and an action such as Order.'],
     ['Search, sort & export','Search SKU rows, sort columns, refine Store/Category/Brand/Action scope, clear a selection, and export CSV files for downstream ordering, returns, or inventory keeping.'],
     ['Scenario planner · prototype extension','Model space-allocation or budget scenarios, preview health/cash/SKU impacts, save a working scenario, and export results without changing canonical Pulse recommendations.'],
+    ['Get well plan · MVP execution','Pair the best missing products with the worst products held, split the actions into monthly capacity waves, project health improvement, lock active work, and refresh only future waves.'],
   ];
-  return <div><Breadcrumb items={['Pulse AI','How it works']} /><h1 className="text-[22px] font-medium">How Pulse AI works</h1><p className="text-sm text-gray-500 mt-1 max-w-3xl">A feature guide reconstructed from the supplied current-product reference photos. The scenario planner is explicitly marked as a prototype extension.</p><div className="mt-5 grid grid-cols-2 gap-4">{features.map(([title,body],i) => <section key={title} className="bg-white border border-gray-200 rounded-2xl p-5"><div className="w-9 h-9 rounded-xl bg-blue-50 text-blue-700 flex items-center justify-center mb-3">{i === 5 ? <Beaker size={18} /> : i === 4 ? <Download size={18} /> : i === 3 ? <List size={18} /> : i === 2 ? <BarChart3 size={18} /> : i === 1 ? <Store size={18} /> : <SlidersHorizontal size={18} />}</div><h2 className="font-medium">{title}</h2><p className="text-sm text-gray-600 mt-2 leading-relaxed">{body}</p></section>)}</div><section className="mt-4 bg-gray-900 text-white rounded-2xl p-5"><div className="flex gap-3"><BookOpen size={19} className="text-blue-300 mt-0.5" /><div><h2 className="font-medium">Prototype evidence note</h2><p className="text-sm text-gray-300 mt-1 leading-relaxed">The current-feature inventory is limited to what is visible in the photos dated April 26, 2026. Authentication, permissions, backend calculations, and production side effects are not inferable from screenshots, so this prototype uses realistic mock data and client-side interactions only.</p></div></div></section></div>;
+  return <div><Breadcrumb items={['Pulse AI','How it works']} /><h1 className="text-[22px] font-medium">How Pulse AI works</h1><p className="text-sm text-gray-500 mt-1 max-w-3xl">A feature guide reconstructed from the supplied current-product reference photos. New planning and execution capabilities are explicitly marked as prototype extensions.</p><div className="mt-5 grid grid-cols-2 gap-4">{features.map(([title,body],i) => <section key={title} className="bg-white border border-gray-200 rounded-2xl p-5"><div className="w-9 h-9 rounded-xl bg-blue-50 text-blue-700 flex items-center justify-center mb-3">{i === 6 ? <Route size={18} /> : i === 5 ? <Beaker size={18} /> : i === 4 ? <Download size={18} /> : i === 3 ? <List size={18} /> : i === 2 ? <BarChart3 size={18} /> : i === 1 ? <Store size={18} /> : <SlidersHorizontal size={18} />}</div><h2 className="font-medium">{title}</h2><p className="text-sm text-gray-600 mt-2 leading-relaxed">{body}</p></section>)}</div><section className="mt-4 bg-gray-900 text-white rounded-2xl p-5"><div className="flex gap-3"><BookOpen size={19} className="text-blue-300 mt-0.5" /><div><h2 className="font-medium">Prototype evidence note</h2><p className="text-sm text-gray-300 mt-1 leading-relaxed">The current-feature inventory is limited to what is visible in the photos dated April 26, 2026. Authentication, permissions, backend calculations, and production side effects are not inferable from screenshots, so this prototype uses realistic mock data and client-side interactions only.</p></div></div></section></div>;
 }
 
 // ============================================================================
@@ -2238,7 +2386,8 @@ export default function PulsePlannerPrototype() {
         {screen === 'category-l2' && <CategoryHealthScreen level="l2" onNavigate={setScreen} />}
         {screen === 'category-l3' && <CategoryHealthScreen level="l3" onNavigate={setScreen} />}
         {screen === 'category-l4' && <CategoryHealthScreen level="l4" onNavigate={setScreen} />}
-        {screen === 'sku-list' && <SkuListScreen />}
+        {screen === 'sku-list' && <SkuListScreen onNavigate={setScreen} />}
+        {screen === 'get-well' && <GetWellPlanScreen onNavigate={setScreen} />}
         {screen === 'help' && <HowItWorksScreen />}
       </main>
     </div>

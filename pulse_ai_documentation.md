@@ -96,6 +96,20 @@ The repository also contains a proposed planner not shown as a current feature i
 
 See `pulse_planner_logic_spec.md` for the proposed compute and persistence design.
 
-## 9. Known boundaries
+## 9. MVP extension: Get Well Plan
+
+The Get Well Plan is the execution layer between strategy and SKU operations:
+
+1. Scenario Planner defines assortment strategy.
+2. The strategy changes the Order and Return recommendations visible in the SKU List.
+3. Get Well Plan pairs the highest-ranked missing products with the lowest-ranked products held.
+4. A manually assigned monthly store capacity splits those paired replacements into waves.
+5. Each wave projects newly aligned products, remaining backlog, and health-score improvement.
+6. Launching a wave freezes its actions for operational stability.
+7. Completed waves remain historical; only future waves refresh from daily rankings and current strategy.
+
+For the MVP, one store receives one manually configured monthly replacement capacity. A capacity of 10,000 means 10,000 Returns plus 10,000 paired Orders per wave. Order and Return CSVs can be exported separately.
+
+## 10. Known boundaries
 
 The following cannot be confirmed from photographs alone: production authentication and authorization, exact formulas, live data sources, export variants, backend side effects, audit history, accessibility conformance, or error and empty states. The prototype uses mock data and browser-local interaction only.

@@ -96,13 +96,13 @@ The repository also contains a proposed planner not shown as a current feature i
 
 See `pulse_planner_logic_spec.md` for the proposed compute and persistence design.
 
-## 9. MVP extension: Get Well Plan
+## 9. MVP extension: Store Execution
 
-The Get Well Plan is the execution layer between strategy and SKU operations:
+Store Execution is the operational layer between strategy and SKU recommendations:
 
 1. Scenario Planner defines assortment strategy.
 2. The strategy changes the Order and Return recommendations visible in the SKU List.
-3. The navigation-level Get Well Enablement console turns a store's digital worker on or off after DC capacity has been assigned.
+3. The navigation-level Execution Enablement console turns a store's digital worker on or off after DC capacity has been assigned.
 4. Enabling a store automatically builds and maintains its proposed execution plan.
 5. Review, editing, and launch happen within that store's own page rather than in the enablement console.
 6. The store plan pairs the highest-ranked missing products with the lowest-ranked products held.
@@ -115,14 +115,14 @@ For the MVP, each enabled store receives one manually configured monthly replace
 
 ### Information architecture
 
-- **Get Well Enablement navigation:** portfolio-level activation and monitoring of store digital workers.
+- **Execution Enablement navigation:** portfolio-level activation and monitoring of store digital workers.
 - **Store page:** detailed recovery journey, capacity settings, wave review, edits, and launch.
 - **SKU List:** ranked operational inputs and a contextual link back to the store execution plan.
 - **Scenario Planner:** strategy source whose rules affect future SKU recommendations and unlaunched waves.
 
 ### Visual direction
 
-The Get Well experience stays inside Pulse AI's existing visual language: neutral dashboard surfaces, blue primary actions, familiar health-score colors, compact filters, and bordered metric cards. The store journey is organized around outcomes rather than folders: each wave reveals the category health transitions, Scenario Planner rules, ranked Orders and Returns, aligned-product gain, and projected store health lift it creates.
+Store Execution stays inside Pulse AI's existing visual language: neutral dashboard surfaces, blue primary actions, familiar health-score colors, compact filters, and bordered metric cards. The store Overview explains the score and ranks unhealthy L1 categories. Category Health supports breadcrumbed L1–L4 drill-down with category-scoped SKU access at every level. The execution journey is organized around outcomes: each wave reveals category health transitions, Scenario Planner rules, ranked Orders and Returns, aligned-product gain, and projected store health lift.
 
 ## 10. Known boundaries
 

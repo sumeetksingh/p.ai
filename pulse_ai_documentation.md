@@ -110,8 +110,11 @@ Store Execution is the operational layer between strategy and SKU recommendation
 8. Each wave projects newly aligned products, remaining backlog, and health-score improvement.
 9. Launching a wave freezes its actions for operational stability.
 10. Completed waves remain historical; only future waves refresh from daily rankings and current strategy.
+11. Users can schedule an effective-dated Scenario Planner change for a future wave, preview its effect, and approve it before that wave is locked.
 
 For the MVP, each enabled store receives one manually configured monthly return budget. A budget of $10,000 means the DC can accept up to $10,000 of returned inventory value from that store during the month. Pulse selects the worst-ranked Return recommendations until that value limit is reached; the number of returned SKUs therefore varies with item value. Order recommendations are sequenced from the highest-ranked missing products and are reported separately—they do not consume the DC return budget. The budget exists because accepted Returns are recognized as a negative impact in the DC's P&L and consume finite handling capacity.
+
+Strategy changes are effective-dated at the wave level. For example, a user can schedule “Bring in more Spark Plugs” for May 2027. Pulse simulates the new rule against the latest ranking, shows the revised SKU and health impact, and applies it immediately before the May wave is locked. Locked or active waves remain unchanged for operational stability; later waves are recalculated from the newly approved strategy.
 
 ### Information architecture
 

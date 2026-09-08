@@ -1,5 +1,7 @@
 # Pulse AI Store Execution — Prototype Implementation Guide
 
+> Porting this feature into the production React and Python applications? Start with [`STORE_EXECUTION_PORTING_SPEC.md`](./STORE_EXECUTION_PORTING_SPEC.md). It separates required product behavior from prototype-only mock logic and defines the recommended API, persistence, lifecycle, and acceptance contracts.
+
 ## Purpose
 
 Store Execution turns Pulse AI's ranked SKU recommendations into a capacity-aware recovery journey for an individual store.
